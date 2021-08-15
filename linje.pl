@@ -20,11 +20,13 @@ foreach my $i (@FILES)
 	my $lc = 0;
 	my $bc = 0;
 	my $cc = 0;
+
 	open(FILE, "<$i") or die "Couldn't open file $!";
 	if (-d $i) { next; }
+
 	foreach my $line (<FILE>)
 	{
-		if (defined $line)
+		if (length $line != 1)
 		{
 			$totalcodecount++;
 			$cc++;
@@ -37,16 +39,12 @@ foreach my $i (@FILES)
 		$totallinecount++;
 		$lc++;
 	}
+
 	my @splitty= split('/', $i);
 	my $filename = $splitty[scalar @splitty - 1];
-	if (length($filename) < 6)
-	{
-		print("  $filename\t\t$lc\t\t$bc\t\t$cc\n");
-	}
-	else
-	{
-		print("  $filename\t$lc\t\t$bc\t\t$cc\n");
-	}
+	
+	if (length($filename) < 6) { $filename += "\t"; }
+	print("  $filename\t$lc\t\t$bc\t\t$cc\n");
 
 }
 
