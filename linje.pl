@@ -1,11 +1,27 @@
 #!/usr/bin/env perl
 
+# Goals #
+# --show option shows all file names (cluttered) #
+# --exclude option doesnt count file(s) #
+# Detect language # 
+
 use strict;
 use warnings;
 
 use Cwd qw(cwd getcwd);
 my $dir = cwd;
 our @FILES = defined $ARGV[0] ? @ARGV : glob($dir . '/*');
+our $showflag = 0;
+
+foreach my $arg (@ARGV)
+{
+	if ($arg eq "--show") { $showflag = 1; }
+	elsif ($arg eq "--exclude")
+	{
+		# everything that comes after remove from files #
+	}
+
+}
 
 our $totallinecount = 0;
 our $totalblankcount = 0;
