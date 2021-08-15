@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Cwd qw(cwd getcwd);
+use List::Util qw(first);
 my $dir = cwd;
 our @FILES = glob($dir . '/*');
 our $bytesflag = 0;
@@ -25,15 +26,28 @@ foreach my $arg (@ARGV)
 	elsif($arg eq "--size") { $bytesflag = 1; }
 	elsif ($arg eq "--exclude")
 	{
-		# everything that comes after remove from files #
+		for (my $i = 1; $i <= $#ARGV; $i++)
+		{
+			my $fn = $dir . "/" . $ARGV[$i];
+			my $index = first { $FILES[$_] eq $fn } 0..$#FILES; 
+			splice(@FILES, $index, 1) if defined $index; 
+		}	
 	}
 	elsif ($arg eq "--include")
 	{
 		@FILES = ();
 		for (my $i = 1; $i <= $#ARGV; $i++)
 		{
-			push(@FILES, $ARGV[$i]);
+			if (not substr($ARGV[$i], 0, 2) eq '--')
+			{
+				push(@FILES, $ARGV[$i]);
+			}
 		}
+	}
+	elsif($arg eq "--help")
+	{
+		print("Help menu.\n");
+		exit(0);
 	}
 }
 
