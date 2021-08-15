@@ -12,10 +12,12 @@ use Cwd qw(cwd getcwd);
 my $dir = cwd;
 our @FILES = defined $ARGV[0] ? @ARGV : glob($dir . '/*');
 our $showflag = 0;
+our $bytesflag = 0;
 
 foreach my $arg (@ARGV)
 {
 	if ($arg eq "--show") { $showflag = 1; }
+	elsif($arg eq "--sizes" { $bytesflag = 1; }
 	elsif ($arg eq "--exclude")
 	{
 		# everything that comes after remove from files #
@@ -26,6 +28,7 @@ foreach my $arg (@ARGV)
 our $totallinecount = 0;
 our $totalblankcount = 0;
 our $totalcodecount = 0;
+our $totalbytes = 0;
 
 print("──────────────────────────────────────────────────────────\n");
 print("  File\t\tLines\t\tBlank\t\tCode\t\t\n");
@@ -39,6 +42,7 @@ foreach my $i (@FILES)
 
 	open(FILE, "<$i") or die "Couldn't open file $!";
 	if (-d $i) { next; }
+	$totalbytes += (-s $i);
 
 	foreach my $line (<FILE>)
 	{
@@ -66,5 +70,7 @@ foreach my $i (@FILES)
 
 print("──────────────────────────────────────────────────────────\n");
 print("  Total\t\t$totallinecount\t\t$totalblankcount\t\t$totalcodecount\n");
+print("──────────────────────────────────────────────────────────\n");
+print("  Processed $totalbytes bytes\n");
 print("──────────────────────────────────────────────────────────\n");
 
