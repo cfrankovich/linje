@@ -27,9 +27,9 @@ our $totallinecount = 0;
 our $totalblankcount = 0;
 our $totalcodecount = 0;
 
-print("= - - - - - - - - - - - - - - - - - - - - - - - - - - - - =\n");
+print("──────────────────────────────────────────────────────────\n");
 print("  File\t\tLines\t\tBlank\t\tCode\t\t\n");
-print("= - - - - - - - - - - - - - - - - - - - - - - - - - - - - =\n");
+print("──────────────────────────────────────────────────────────\n");
 
 foreach my $i (@FILES)
 {
@@ -64,7 +64,7 @@ foreach my $i (@FILES)
 
 }
 
-print("= - - - - - - - - - - - - - - - - - - - - - - - - - - - - =\n");
+print("──────────────────────────────────────────────────────────\n");
 print("  Total\t\t$totallinecount\t\t$totalblankcount\t\t$totalcodecount\n");
-print("= - - - - - - - - - - - - - - - - - - - - - - - - - - - - =\n");
+print("──────────────────────────────────────────────────────────\n");
 
