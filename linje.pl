@@ -1,37 +1,44 @@
 #!/usr/bin/env perl
 
-# Goals #
-# --show option shows all file names (cluttered) #
-# --exclude option doesnt count file(s) #
-# Detect language # 
-
 use strict;
 use warnings;
 
 use Cwd qw(cwd getcwd);
 my $dir = cwd;
-our @FILES = defined $ARGV[0] ? @ARGV : glob($dir . '/*');
-our $showflag = 0;
+our @FILES = glob($dir . '/*');
 our $bytesflag = 0;
-
-foreach my $arg (@ARGV)
-{
-	if ($arg eq "--show") { $showflag = 1; }
-	elsif($arg eq "--sizes" { $bytesflag = 1; }
-	elsif ($arg eq "--exclude")
-	{
-		# everything that comes after remove from files #
-	}
-
-}
 
 our $totallinecount = 0;
 our $totalblankcount = 0;
 our $totalcodecount = 0;
 our $totalbytes = 0;
 
+# Should be 'Language' #
+our $firstthing = "File   ";
+
+foreach my $arg (@ARGV)
+{
+	if ($arg eq "--show") 
+	{
+		$firstthing = "File  ";	
+	}
+	elsif($arg eq "--size") { $bytesflag = 1; }
+	elsif ($arg eq "--exclude")
+	{
+		# everything that comes after remove from files #
+	}
+	elsif ($arg eq "--include")
+	{
+		@FILES = ();
+		for (my $i = 1; $i <= $#ARGV; $i++)
+		{
+			push(@FILES, $ARGV[$i]);
+		}
+	}
+}
+
 print("──────────────────────────────────────────────────────────\n");
-print("  File\t\tLines\t\tBlank\t\tCode\t\t\n");
+print("  $firstthing\tLines\t\tBlank\t\tCode\t\t\n");
 print("──────────────────────────────────────────────────────────\n");
 
 foreach my $i (@FILES)
@@ -71,6 +78,9 @@ foreach my $i (@FILES)
 print("──────────────────────────────────────────────────────────\n");
 print("  Total\t\t$totallinecount\t\t$totalblankcount\t\t$totalcodecount\n");
 print("──────────────────────────────────────────────────────────\n");
-print("  Processed $totalbytes bytes\n");
-print("──────────────────────────────────────────────────────────\n");
+if ($bytesflag)
+{
+	print("  Processed $totalbytes bytes\n");
+	print("──────────────────────────────────────────────────────────\n");
+}
 
