@@ -8,6 +8,7 @@ use List::Util qw(first);
 my $dir = cwd;
 our @FILES = glob($dir . '/*');
 our $bytesflag = 0;
+our $recurflag = 0;
 
 our $totallinecount = 0;
 our $totalblankcount = 0;
@@ -26,8 +27,7 @@ foreach my $arg (@ARGV)
 	elsif($arg eq "--size") { $bytesflag = 1; }
 	elsif ($arg eq "--exclude")
 	{
-		for (my $i = 1; $i <= $#ARGV; $i++)
-		{
+		for (my $i = 1; $i <= $#ARGV; $i++) {
 			my $fn = $dir . "/" . $ARGV[$i];
 			my $index = first { $FILES[$_] eq $fn } 0..$#FILES; 
 			splice(@FILES, $index, 1) if defined $index; 
@@ -44,9 +44,19 @@ foreach my $arg (@ARGV)
 			}
 		}
 	}
+	elsif ($arg eq "--recursive") { $recurflag = 1; }
 	elsif($arg eq "--help")
 	{
-		print("Help menu.\n");
+		print("──────────────────────────────────────────────────────────\n");
+		print("  Linje Help Menu | https://github.com/cfrankovich/linje  \n");
+		print("──────────────────────────────────────────────────────────\n");
+		print(" Usage:\n     linje [flags] [files]\n");
+		print("──────────────────────────────────────────────────────────\n");
+		print(" --show\t\tDisplays all files read\n");
+		print(" --size\t\tDisplays the amount of bytes read\n");
+		print(" --exclude\tExcludes files from being read\n");
+		print(" --include\tPick files to be read\n");
+		print("──────────────────────────────────────────────────────────\n");
 		exit(0);
 	}
 }
@@ -62,7 +72,15 @@ foreach my $i (@FILES)
 	my $cc = 0;
 
 	open(FILE, "<$i") or die "Couldn't open file $!";
-	if (-d $i) { next; }
+	if (-d $i) 
+	{
+		if ($recurflag)
+		{
+			foreach my $k (glob($i . '/*')) { push(@FILES, $k); }
+			next;
+		}
+		else { next; } 
+	}
 	$totalbytes += (-s $i);
 
 	foreach my $line (<FILE>)
@@ -84,7 +102,9 @@ foreach my $i (@FILES)
 	my @splitty= split('/', $i);
 	my $filename = $splitty[scalar @splitty - 1];
 	
-	if (length($filename) < 6) { $filename += "\t"; }
+	no warnings;
+	if (length($filename) < 6) { $filename . "\t"; }
+	use warnings;
 	print("  $filename\t$lc\t\t$bc\t\t$cc\n");
 
 }

@@ -8,8 +8,10 @@ Linje is a program to analyze files. This is my test program to try out perl.
 - [ ] `--show` option shows all file names
 - [x] `--exclude` option excludes files from being counted 
 - [ ] Detect languages 
-- [ ] Recursion on directories (maybe using `--recursive`) 
+- [x] Recursion on directories (maybe using `--recursive`) 
 - [ ] `--stats` show statistics about files 
+- [ ] Prettify the output when using `--recursive`
+- [ ] Prettify long file names
 
 <br></br>
 <img src="https://i.imgur.com/IyVZxnC.gif" width="50%" height="50%"></img>
