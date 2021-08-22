@@ -65,24 +65,34 @@ print("────────────────────────�
 print("  $firstthing\tLines\t\tBlank\t\tCode\t\t\n");
 print("──────────────────────────────────────────────────────────\n");
 
+
 foreach my $i (@FILES)
 {
 	my $lc = 0;
 	my $bc = 0;
 	my $cc = 0;
 
-	open(FILE, "<$i") or die "Couldn't open file $!";
+	if ($recurflag && index($i, '->') != -1)
+	{
+		print("$i\n");
+		next;
+	}
+	
 	if (-d $i) 
 	{
 		if ($recurflag)
 		{
+			my @splitty = split('/', $i);
+			my $dirname = $splitty[scalar @splitty - 1];
+			push(@FILES, $dirname . '->');
 			foreach my $k (glob($i . '/*')) { push(@FILES, $k); }
 			next;
 		}
 		else { next; } 
 	}
+	
+	open(FILE, "<$i") or die "Couldn't open file $!";
 	$totalbytes += (-s $i);
-
 	foreach my $line (<FILE>)
 	{
 		if (length $line != 1)
@@ -103,7 +113,13 @@ foreach my $i (@FILES)
 	my $filename = $splitty[scalar @splitty - 1];
 	
 	no warnings;
-	if (length($filename) < 6) { $filename . "\t"; }
+	if (length($filename) < 6) { $filename = $filename . "\t"; }
+	elsif(length($filename) > 12) 
+	{
+		$filename = substr($filename, 0, 9);
+		$filename = $filename . "...";
+	}
+	
 	use warnings;
 	print("  $filename\t$lc\t\t$bc\t\t$cc\n");
 
